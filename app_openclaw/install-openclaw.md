@@ -15,7 +15,7 @@ Guia rápido para subir o OpenClaw em container usando o repositório oficial e 
 
 ## Arquivos para download
 
-_(Inclua aqui links para arquivos extras, se houver.)_
+_https://github.com/aureliolk/app_storageyt/blob/master/app_openclaw/Dockerfile_
 
 ---
 
@@ -30,7 +30,7 @@ cd app_openclaw
 
 ### 2. Editar o Dockerfile igual disponivel para Download
 
-Ajuste o `Dockerfile` se precisar de dependências ou configurações extras.
+Ajuste o `Dockerfile` igual o disponibilizado para download. _(https://github.com/aureliolk/app_storageyt/blob/master/app_openclaw/Dockerfile)_
 
 ### 3. Construir a imagem
 

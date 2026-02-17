@@ -103,6 +103,36 @@ Dentro do container:
 openclaw onboard
 ```
 
+### 8.2. Configurar as ferramentas de Busca e Audio
+
+Dentro do container:
+
+```bash
+"tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "apiKey": ""
+      },
+      "fetch": {
+        "enabled": true
+      }
+    },
+    "media": {
+      "audio": {
+        "enabled": true,
+        "maxBytes": 20971520,
+        "models": [
+          {
+            "provider": "openai",
+            "model": "whisper-1"
+          }
+        ]
+      }
+    }
+  },
+```
+
 ### 9. Acessar o Dashboard
 
 Dentro do container, para obter o link de acesso à UI com token:

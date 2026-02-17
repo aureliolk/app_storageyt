@@ -32,6 +32,7 @@ cd app_openclaw
 ### 2. Configurar arquivos
 
 ```bash
+mkdir config
 echo '{"gateway":{"mode":"local","auth":{"mode":"token","token":"seu-token-aqui"}}}' > config/openclaw.json
 ```
 

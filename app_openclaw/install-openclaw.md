@@ -29,7 +29,11 @@ git clone https://github.com/openclaw/openclaw.git app_openclaw
 cd app_openclaw
 ```
 
-### 2. Configurar arquivos de ignore
+### 2. Configurar arquivos
+
+```bash
+echo '{"gateway":{"mode":"local","auth":{"mode":"token","token":"seu-token-aqui"}}}' > config/openclaw.json
+```
 
 #### Adicionar config/ ao .dockerignore (evita copiar dados locais para a imagem)
 
@@ -41,6 +45,19 @@ echo "config/" >> .dockerignore
 
 ```bash
 echo "/config" >> .gitignore
+```
+
+### Se quiser instalar o OpenClaw Webchat Customizado Audio e Imagenß
+
+```bash
+curl -sSL https://raw.githubusercontent.com/aureliolk/app_storageyt/master/app_openclaw/apply-fixes.sh | bash
+```
+
+Baixe o script `apply-fixes.sh` do link acima e execute:
+
+```bash
+chmod +x apply-fixes.sh
+./apply-fixes.sh
 ```
 
 ### 3. Baixar e configurar o Dockerfile

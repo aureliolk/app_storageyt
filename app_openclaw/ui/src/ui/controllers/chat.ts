@@ -51,11 +51,12 @@ export async function loadChatHistory(state: ChatState) {
 }
 
 function dataUrlToBase64(dataUrl: string): { content: string; mimeType: string } | null {
-  const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
+  const trimmed = dataUrl.trim();
+  const match = /^data:([^;]+);base64,([\s\S]+)$/.exec(trimmed);
   if (!match) {
     return null;
   }
-  return { mimeType: match[1], content: match[2] };
+  return { mimeType: match[1], content: match[2].replace(/\s/g, "") };
 }
 
 export async function sendChatMessage(

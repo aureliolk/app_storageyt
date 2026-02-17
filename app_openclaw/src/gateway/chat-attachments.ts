@@ -44,8 +44,12 @@ function isImageMime(mime?: string): boolean {
 }
 
 function isValidBase64(value: string): boolean {
+  // Allow whitespaces/newlines which are common in large payloads
+  const cleaned = value.replace(/\s/g, "");
   // Minimal validation; avoid full decode allocations for large payloads.
-  return value.length > 0 && value.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(value);
+  return (
+    cleaned.length > 0 && cleaned.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(cleaned)
+  );
 }
 
 /**
@@ -81,10 +85,14 @@ export async function parseMessageWithAttachments(
     let sizeBytes = 0;
     let b64 = content.trim();
     // Strip data URL prefix if present (e.g., "data:image/jpeg;base64,...")
-    const dataUrlMatch = /^data:[^;]+;base64,(.*)$/.exec(b64);
+    const dataUrlMatch = /^data:[^;]+;base64,([\s\S]*)$/.exec(b64);
     if (dataUrlMatch) {
       b64 = dataUrlMatch[1];
     }
+
+    // Strip all internal whitespaces/newlines before processing
+    b64 = b64.replace(/\s/g, "");
+
     if (!isValidBase64(b64)) {
       throw new Error(`attachment ${label}: invalid base64 content`);
     }

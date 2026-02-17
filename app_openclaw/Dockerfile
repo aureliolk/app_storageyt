@@ -1,29 +1,47 @@
-# 1. Imagem base
-FROM ubuntu:22.04
+# Dockerfile para desenvolvimento - usa código local modificado
+FROM node:22-slim
 
-# 2. Evitar prompts interativos do apt
+# Evitar prompts interativos
 ENV DEBIAN_FRONTEND=noninteractive
+ENV CI=true
 
-# 3. Dependências mínimas (curl para o script; o install.sh costuma instalar Node se precisar)
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    git \
-    coreutils \
-    && rm -rf /var/lib/apt/lists/*
+  git \
+  curl \
+  ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
-# 4. Instalar OpenClaw com o script oficial (sem onboarding: não há TTY no build)
-ENV OPENCLAW_NO_ONBOARD=1
-RUN curl -fsSL https://openclaw.ai/install.sh | bash
+# Instalar pnpm
+RUN npm install -g pnpm
 
-# 5. Garantir que o binário está no PATH (o script normalmente coloca em ~/.local/bin)
-ENV PATH="/root/.local/bin:${PATH}"
-
-# 6. Diretório de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# 7. Porta do gateway
+# Copiar arquivos de dependências primeiro (para cache)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY extensions/*/package.json ./extensions/*/
+
+# Instalar dependências (sem frozen-lockfile porque pode estar desatualizado)
+RUN pnpm install --no-frozen-lockfile
+
+# Copiar TODO o código fonte (incluindo suas modificações!)
+COPY . .
+
+# Buildar o projeto
+RUN pnpm build
+
+# Instalar dependências da UI (necessário para evitar frozen-lockfile no build)
+RUN cd /app/ui && pnpm install --no-frozen-lockfile
+
+# Buildar a UI (necessária para o dashboard)
+RUN pnpm ui:build
+
+# Criar link simbólico para o CLI
+RUN ln -s /app/dist/index.js /usr/local/bin/openclaw
+
+# Porta do gateway
 EXPOSE 18789
 
-# 8. Comando padrão: subir o gateway (ou use "bash" para só abrir o shell)
-CMD ["node", "dist/index.js", "gateway", "--bind", "lan"]
+# Comando padrão
+CMD ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]

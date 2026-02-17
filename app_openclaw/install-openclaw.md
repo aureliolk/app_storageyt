@@ -54,13 +54,6 @@ echo "/config" >> .gitignore
 curl -sSL https://raw.githubusercontent.com/aureliolk/app_storageyt/master/app_openclaw/apply-fixes.sh | bash
 ```
 
-Baixe o script `apply-fixes.sh` do link acima e execute:
-
-```bash
-chmod +x apply-fixes.sh
-./apply-fixes.sh
-```
-
 ### 3. Baixar e configurar o Dockerfile
 
 Baixe o `Dockerfile` do link acima e coloque na raiz do projeto, ou crie manualmente com o conteúdo disponibilizado.
